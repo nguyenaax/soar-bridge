@@ -1,0 +1,64 @@
+title: Exploit Attempt — CVE-2024-47177 (Exploitation for Client Execution)
+id: alt_2024_00472
+status: experimental
+description: >
+  Detection rule stub for CVE-2024-47177 — T1203 (Exploitation for Client Execution).
+  An unauthenticated UDP packet sent to port 631 forces the cups-browsed service to connect back to an attacker-controlled IPP server, which returns a malicious PPD file containing a command execution payload via the FoomaticRIPCommandLine attribute.
+date: 2026/06/28
+author: SOAR Bridge Pipeline (auto-generated)
+references:
+  - https://nvd.nist.gov/vuln/detail/CVE-2024-47177
+  - https://attack.mitre.org/techniques/T1203/
+tags:
+  - attack.execution
+  - t1203
+logsource:
+  product: linux
+  service: syslog
+detection:
+  selection_network:
+    # Inbound UDP to CUPS port from untrusted external source
+    proto: UDP
+    dst_port: 631
+    src_ip|contains:
+      - '185.220.101.47'
+  selection_process:
+    # cups-browsed spawning a shell — critical indicator
+    ParentImage|endswith: cups-browsed
+    Image|contains:
+      - /bin/bash
+      - /bin/sh
+      - /usr/bin/python
+  selection_network_outbound:
+    # Outbound C2 connection from print service
+    src_process|contains: cups
+    dst_ip|contains:
+      - '185.220.101.47'
+  selection_file:
+    # Suspicious file drops in temp directories
+    TargetFilename|startswith:
+      - /tmp/
+      - /var/tmp/
+    TargetFilename|contains:
+      - '.s'
+  condition: selection_process or (selection_network and selection_network_outbound)
+falsepositives:
+  - Legitimate CUPS network printing in trusted environments
+  - Authorized remote printer management
+level: critical
+fields:
+  - src_ip
+  - dst_ip
+  - dst_port
+  - process_name
+  - parent_process
+  - file_path
+# ------------------------------------------------------------------------------
+# SOAR BRIDGE PIPELINE — AUTO-GENERATED STUB
+# This rule requires tuning before production deployment.
+# Validate against your SIEM's field naming conventions.
+# Tactic  : Execution
+# Tech ID : T1203
+# CVE     : CVE-2024-47177
+# CVSS    : 9.8
+# ------------------------------------------------------------------------------
