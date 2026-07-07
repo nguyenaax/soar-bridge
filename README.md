@@ -128,18 +128,6 @@ This is the core of **Detection-as-Code** thinking: by forcing the LLM to emit s
 
 ---
 
-## 💼 Interview Talking Points
-
-> *"I built an open-source automation pipeline in Python that ingests raw vulnerability data, passes it through the Gemini API using structured prompt schemas to extract threat vectors, maps them to MITRE ATT\&CK, and automatically exports both markdown incident tickets and YAML detection rules."*
-
-Key concepts you can speak to:
-- **SOAR logic** — event ingestion → enrichment → automated response
-- **Prompt engineering** — deterministic JSON schemas, low-temperature inference
-- **Detection-as-Code** — Sigma rules, MITRE ATT\&CK mapping
-- **LLM-in-the-loop automation** — structured output parsing, Python orchestration
-
----
-
 ## 🔮 Potential Extensions
 
 - [ ] Replace mock data with live feeds (VirusTotal API, Shodan, MISP)
